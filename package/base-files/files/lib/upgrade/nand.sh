@@ -306,13 +306,10 @@ nand_upgrade_fit() {
 # Write images in the TAR file to MTD partitions and/or UBI volumes as required
 nand_upgrade_tar() {
 	local tar_file="$1"
-<<<<<<< HEAD
 	local kernel_mtd="$(find_mtd_index $CI_KERNPART)"
 	local dtb_mtd="$(find_mtd_index $CI_DTBPART)"
 	local ramdisk_mtd="$(find_mtd_index $CI_RAMDISKPART)"
-=======
 	local gz="$2"
->>>>>>> upstream/master
 
 	# WARNING: This fails if tar contains more than one 'sysupgrade-*' directory.
 	local board_dir="$(tar t${gz}f "$tar_file" | grep -m 1 '^sysupgrade-.*/$')"
