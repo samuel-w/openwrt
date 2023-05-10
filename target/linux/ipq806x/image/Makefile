@@ -3,29 +3,8 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/image.mk
 
-DEVICE_VARS += NETGEAR_BOARD_ID NETGEAR_HW_ID
-DEVICE_VARS += TPLINK_BOARD_ID
-
-define Build/buffalo-rootfs-cksum
-	( \
-		echo -ne "\x$$(od -A n -t u1 $@ | tr -s ' ' '\n' | \
-			$(STAGING_DIR_HOST)/bin/awk '{s+=$$0}END{printf "%x", 255-s%256}')"; \
-	) >> $@
-endef
-
-define Build/edimax-header
-	$(eval edimax_model=$(word 1,$(1)))
-
-	$(STAGING_DIR_HOST)/bin/mkedimaximg \
-	-b -s CSYS -m $(edimax_model) \
-	-f 0x70000 -S 0x1200000 \
-	-i $@ -o $@.new
-	@mv $@.new $@
-endef
-
 define Device/Default
 	PROFILES := Default
-	KERNEL_DEPENDS = $$(wildcard $(DTS_DIR)/$$(DEVICE_DTS).dts)
 	KERNEL_LOADADDR = 0x42208000
 	DEVICE_DTS = $$(SOC)-$(lastword $(subst _, ,$(1)))
 	DEVICE_DTS_CONFIG := config@1
@@ -42,13 +21,13 @@ endef
 
 define Device/FitImage
 	KERNEL_SUFFIX := -fit-uImage.itb
-	KERNEL = kernel-bin | gzip | fit gzip $$(DTS_DIR)/$$(DEVICE_DTS).dtb
+	KERNEL = kernel-bin | gzip | fit gzip $$(KDIR)/image-$$(DEVICE_DTS).dtb
 	KERNEL_NAME := Image
 endef
 
 define Device/FitImageLzma
 	KERNEL_SUFFIX := -fit-uImage.itb
-	KERNEL = kernel-bin | lzma | fit lzma $$(DTS_DIR)/$$(DEVICE_DTS).dtb
+	KERNEL = kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(DEVICE_DTS).dtb
 	KERNEL_NAME := Image
 endef
 
@@ -452,5 +431,6 @@ define Device/zyxel_nbg6817
 	$(call Device/ZyXELImage)
 endef
 TARGET_DEVICES += zyxel_nbg6817
+include $(SUBTARGET).mk
 
 $(eval $(call BuildImage))

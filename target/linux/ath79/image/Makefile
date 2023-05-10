@@ -8,14 +8,6 @@ DEVICE_VARS += LOADER_FLASH_MAX LOADER_KERNEL_MAGIC
 DEVICE_VARS += NETGEAR_BOARD_ID NETGEAR_HW_ID
 DEVICE_VARS += RAS_BOARD RAS_ROOTFS_SIZE RAS_VERSION
 
-define Build/combined-image
-	sh $(TOPDIR)/scripts/combined-image.sh \
-		"$(IMAGE_KERNEL)" \
-		"$@" \
-		"$@.new"
-	@mv $@.new $@
-endef
-
 define Build/loader-common
 	rm -rf $@.src
 	$(MAKE) -C lzma-loader \
@@ -68,6 +60,9 @@ define Build/relocate-kernel
 	rm -rf $@.relocate
 endef
 
+define Build/append-squashfs-fakeroot-be
+	cat ./empty-squashfs-lzma >> $@
+endef
 
 define Device/Default
   DEVICE_DTS_DIR := ../dts
@@ -91,7 +86,7 @@ define Device/loader-okli-uimage
   LOADER_TYPE := bin
   COMPILE := loader-$(1).bin loader-$(1).uImage
   COMPILE/loader-$(1).bin := loader-okli-compile
-  COMPILE/loader-$(1).uImage := append-loader-okli $(1) | pad-to 64k | \
+  COMPILE/loader-$(1).uImage := loader-okli-compile | pad-to 64k | \
 	lzma | uImage lzma
 endef
 
@@ -105,6 +100,7 @@ endif
 ifeq ($(SUBTARGET),tiny)
 include tiny-netgear.mk
 include tiny-tp-link.mk
+include tiny-ubnt.mk
 endif
 
 $(eval $(call BuildImage))

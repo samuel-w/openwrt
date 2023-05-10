@@ -7,14 +7,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cmake
-PKG_VERSION:=3.21.3
+PKG_VERSION:=3.26.3
+PKG_VERSION_MAJOR:=$(word 1,$(subst ., ,$(PKG_VERSION))).$(word 2,$(subst ., ,$(PKG_VERSION)))
 PKG_RELEASE:=1
 PKG_CPE_ID:=cpe:/a:kitware:cmake
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/Kitware/CMake/releases/download/v$(PKG_VERSION)/ \
-		https://cmake.org/files/v3.19/
-PKG_HASH:=d14d06df4265134ee42c4d50f5a60cb8b471b7b6a47da8e5d914d49dd783794f
+		https://cmake.org/files/v$(PKG_VERSION_MAJOR)/
+PKG_HASH:=bbd8d39217509d163cb544a40d6428ac666ddc83e22905d3e52c925781f0f659
 
 HOST_BUILD_PARALLEL:=1
 HOST_CONFIGURE_PARALLEL:=1
@@ -25,11 +26,16 @@ HOST_CONFIGURE_VARS += \
 	CC="$(HOSTCC_NOCACHE)" \
 	CXX="$(HOSTCXX_NOCACHE)" \
 	MAKEFLAGS="$(HOST_JOBS)" \
-	CXXFLAGS="$(HOST_CFLAGS)"
+	CXXFLAGS="$(HOST_CFLAGS)" \
+	MAKE="$(STAGING_DIR_HOST)/bin/ninja"
 
 HOST_CONFIGURE_ARGS := \
 	$(if $(MAKE_JOBSERVER),--parallel="$(MAKE_JOBSERVER)") \
 	--prefix="$(STAGING_DIR_HOST)" \
+	--system-expat \
+	--system-liblzma \
+	--system-zlib \
+	--system-zstd \
 	--generator=Ninja
 
 define Host/Compile/Default
