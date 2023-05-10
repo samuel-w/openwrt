@@ -16,7 +16,6 @@ define Build/boot-common
 	rm -fR $@.boot
 	mkdir -p $@.boot
 
-	$(CP) $(DTS_DIR)/$(DEVICE_DTS).dtb $@.boot/rockchip.dtb
 	$(CP) $(IMAGE_KERNEL) $@.boot/kernel.img
 endef
 
@@ -34,7 +33,7 @@ define Build/pine64-img
 	# http://opensource.rock-chips.com/wiki_Boot_option#Boot_flow
 	#
 	# U-Boot SPL expects the U-Boot ITB to be located at sector 0x4000 (8 MiB) on the MMC storage
-	$(SCRIPT_DIR)/gen_image_generic.sh \
+	PADDING=1 $(SCRIPT_DIR)/gen_image_generic.sh \
 		$@ \
 		$(CONFIG_TARGET_KERNEL_PARTSIZE) $@.boot \
 		$(CONFIG_TARGET_ROOTFS_PARTSIZE) $(IMAGE_ROOTFS) \
@@ -48,7 +47,7 @@ endef
 ### Devices ###
 define Device/Default
   PROFILES := Default
-  KERNEL := kernel-bin
+  KERNEL = kernel-bin | lzma | fit lzma $$(DTS_DIR)/$$(DEVICE_DTS).dtb
   IMAGES := sysupgrade.img.gz
   DEVICE_DTS = rockchip/$$(SOC)-$(lastword $(subst _, ,$(1)))
 endef

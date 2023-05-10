@@ -10,7 +10,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 
 --- a/include/linux/netdevice.h
 +++ b/include/linux/netdevice.h
-@@ -832,6 +832,7 @@ enum net_device_path_type {
+@@ -855,6 +855,7 @@ enum net_device_path_type {
  	DEV_PATH_VLAN,
  	DEV_PATH_BRIDGE,
  	DEV_PATH_PPPOE,
@@ -18,7 +18,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
  };
  
  struct net_device_path {
-@@ -852,6 +853,10 @@ struct net_device_path {
+@@ -875,6 +876,10 @@ struct net_device_path {
  			u16		vlan_id;
  			__be16		vlan_proto;
  		} bridge;
@@ -31,7 +31,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
  
 --- a/net/dsa/slave.c
 +++ b/net/dsa/slave.c
-@@ -1617,6 +1617,21 @@ static struct devlink_port *dsa_slave_ge
+@@ -1619,6 +1619,21 @@ static struct devlink_port *dsa_slave_ge
  	return dp->ds->devlink ? &dp->devlink_port : NULL;
  }
  
@@ -53,7 +53,7 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
  static const struct net_device_ops dsa_slave_netdev_ops = {
  	.ndo_open	 	= dsa_slave_open,
  	.ndo_stop		= dsa_slave_close,
-@@ -1642,6 +1657,7 @@ static const struct net_device_ops dsa_s
+@@ -1644,6 +1659,7 @@ static const struct net_device_ops dsa_s
  	.ndo_vlan_rx_kill_vid	= dsa_slave_vlan_rx_kill_vid,
  	.ndo_get_devlink_port	= dsa_slave_get_devlink_port,
  	.ndo_change_mtu		= dsa_slave_change_mtu,

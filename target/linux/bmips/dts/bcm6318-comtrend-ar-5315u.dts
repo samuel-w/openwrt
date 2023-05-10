@@ -19,32 +19,34 @@
 
 	keys {
 		compatible = "gpio-keys-polled";
-		poll-interval = <20>;
+		poll-interval = <100>;
 
 		wps {
 			label = "wps";
-			gpios = <&pinctrl 3 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_WPS_BUTTON>;
 			debounce-interval = <60>;
 		};
 
 		reset {
 			label = "reset";
-			gpios = <&pinctrl 33 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio 33 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_RESTART>;
 			debounce-interval = <60>;
 		};
 	};
 
 	bcm43217-sprom {
-		compatible = "brcm,bcm43217-sprom";
+		compatible = "brcm,bcma-sprom";
 
 		pci-bus = <1>;
 		pci-dev = <0>;
 
-		mtd-mac-address = <&cfe 0x6a0>;
-		mtd-mac-address-increment = <1>;
+		nvmem-cells = <&macaddr_cfe_6a0>;
+		nvmem-cell-names = "mac-address";
+		mac-address-increment = <1>;
 
+		brcm,sprom = "brcm/bcm43217-sprom.bin";
 		brcm,sprom-fixups = <6 0x1c00>,
 				    <65 0x1255>,
 				    <97 0xfe55>,
@@ -66,7 +68,8 @@
 &ethernet {
 	status = "okay";
 
-	mtd-mac-address = <&cfe 0x6a0>;
+	nvmem-cells = <&macaddr_cfe_6a0>;
+	nvmem-cell-names = "mac-address";
 };
 
 &hsspi {
@@ -211,6 +214,7 @@
 			label = "lan4";
 
 			phy-handle = <&phy1>;
+			phy-mode = "mii";
 		};
 
 		port@1 {
@@ -218,6 +222,7 @@
 			label = "lan3";
 
 			phy-handle = <&phy2>;
+			phy-mode = "mii";
 		};
 
 		port@2 {
@@ -225,6 +230,7 @@
 			label = "lan2";
 
 			phy-handle = <&phy3>;
+			phy-mode = "mii";
 		};
 
 		port@3 {
@@ -232,6 +238,7 @@
 			label = "lan1";
 
 			phy-handle = <&phy4>;
+			phy-mode = "mii";
 		};
 	};
 };
@@ -242,4 +249,14 @@
 
 &usbh {
 	status = "okay";
+};
+
+&cfe {
+	compatible = "nvmem-cells";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	macaddr_cfe_6a0: macaddr@6a0 {
+		reg = <0x6a0 0x6>;
+	};
 };
