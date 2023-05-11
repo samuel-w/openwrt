@@ -63,7 +63,7 @@
 			label = "yellow:power";
 			gpios = <&qcom_pinmux 22 GPIO_ACTIVE_LOW>;
 		};
-		
+
 		led_power_orange: power_orange { 
 			label = "orange:power";
 			gpios = <&qcom_pinmux 23 GPIO_ACTIVE_LOW>;
@@ -74,28 +74,28 @@
 			gpios = <&qcom_pinmux 24 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "phy1tpt";
 		};
-		
+
 		led_wlan5g_yellow {
 			label = "yellow:wlan5g";
 			gpios = <&qcom_pinmux 25 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "phy0tpt";
 		};
-		
+
 		led_lan1_yellow {
 			label = "yellow:lan1";
 			gpios = <&qcom_pinmux 26 GPIO_ACTIVE_LOW>;
 		};
-		
+
 		led_lan1_orange {
 			label = "orange:lan1";
 			gpios = <&qcom_pinmux 27 GPIO_ACTIVE_LOW>;
 		};
-		
+
 		led_lan2_yellow {
 			label = "yellow:lan2";
 			gpios = <&qcom_pinmux 28 GPIO_ACTIVE_LOW>;
 		};
-		
+
 		led_lan2_orange {
 			label = "orange:lan2";
 			gpios = <&qcom_pinmux 29 GPIO_ACTIVE_LOW>;
@@ -145,14 +145,14 @@
 			bias-pull-up;
 		};
 	};
-	
+
 	rgmii0_pins: rgmii0_pins {
 		mux {
 			pins = "gpio2", "gpio66";
 			drive-strength = <8>;
 			bias-disable;
 		};
-		
+
 		tx {
 			pins = "gpio53", "gpio64";
 			drive-strength = <2>;
@@ -211,7 +211,7 @@
 
 			partitions {
 				compatible = "fixed-partitions";
-				
+
 				cfg1@02a0000 {
 					label = "CFG1";
 					reg = <0x02a0000 0x0010000>;
@@ -283,7 +283,7 @@
 	};
 };
 
-&nand_controller {
+&nand {
 	status = "okay";
 
 	pinctrl-0 = <&nand_pins>;
@@ -302,7 +302,7 @@
 			compatible = "fixed-partitions";
 			#address-cells = <1>;
 			#size-cells = <1>;
-			
+
 			ubi@0 {
 				label = "ubi";
 				reg = <0x0000000 0x20000000>;
@@ -345,7 +345,7 @@
 
 	phy-mode = "rgmii";
 	phy-handle = <&phy1>;
-	
+
 	fixed-link {
 		speed = <1000>;
 		full-duplex;
@@ -365,3 +365,4 @@
 &adm_dma {
 	status = "okay";
 };
+

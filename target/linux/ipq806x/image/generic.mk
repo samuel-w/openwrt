@@ -159,8 +159,7 @@ define Device/extreme_ap3935i
 	KERNEL_SIZE := 14400k
 	KERNEL_SUFFIX := -uImage
 	UBINIZE_OPTS := -E 5
-	DEVICE_PACKAGES := ath10k-firmware-qca99x0-ct \
-	 ath10k-board-qca99x0-2g-high ath10k-board-qca99x0-5g-high
+	DEVICE_PACKAGES := ath10k-firmware-qca99x0-ct
 endef
 TARGET_DEVICES += extreme_ap3935i
 
